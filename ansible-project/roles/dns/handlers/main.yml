@@ -1,0 +1,5 @@
+---
+- name: Redemarrer Bind9
+  ansible.builtin.service:
+    name: named
+    state: restarted

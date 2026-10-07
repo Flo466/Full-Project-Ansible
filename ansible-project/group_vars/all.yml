@@ -1,0 +1,33 @@
+---
+# ---------- Socle commun (role common) ----------
+common_packages:
+  - curl
+  - vim
+  - htop
+  - sudo
+  - qemu-guest-agent
+common_timezone: Europe/Paris
+
+# ---------- Site web (role web) ----------
+site_name: NETSYS
+site_root: /var/www/html
+web_port: 80
+
+# ---------- DNS (role dns) ----------
+dns_domain: netsys.test
+dns_record: www
+dns_record_ip: 192.168.10.20
+
+# ---------- SFTP (role sftp) ----------
+sftp_user: netsys
+sftp_group: netsys
+sftp_dir: /srv/sftp
+
+# ---------- Base de donnees (role database) ----------
+db_name: netsys
+db_user: netsys_app
+db_password: "Labo-Uniquement-Aucune-Valeur"
+
+# ---------- Supervision (role monitoring) ----------
+monitoring_port: 9100
+dns_forwarder: 192.168.1.1

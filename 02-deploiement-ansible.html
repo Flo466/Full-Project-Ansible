@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Déploiement automatisé d'une infrastructure multiservice avec
+Ansible</title>
+<style>:root{
+  /* ---------- palette : pastel vert, texte noir ---------- */
+  --hero:#e3efdb; --card:#eaf3e4; --card-2:#f4f9f0; --wash:#f1f7ed;
+  --line:#cfe0c2; --line-2:#b7d0a6;
+  --green:#2f6b45; --green-ink:#1c3c26;
+  --white:#ffffff; --ink:#14180f; --ink-2:#4d5648;
+  --code-bg:#16201a;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --col:840px; --col-wide:1080px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+::selection{background:#cfe6c0;color:var(--ink)}
+body{margin:0;background:var(--white);color:var(--ink);font-family:var(--sans);
+  font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--col);margin:0 auto;padding:0 24px}
+.wrap-wide{max-width:var(--col-wide);margin:0 auto;padding:0 24px}
+
+/* ---------- bandeau ---------- */
+.masthead{background:var(--hero);border-bottom:3px solid var(--card);padding:52px 0 46px;margin-bottom:40px}
+.masthead .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--green-ink);font-weight:700;margin:0 0 16px}
+.masthead h1{margin:0;font-size:2.3rem;line-height:1.22;font-weight:700;
+  letter-spacing:-.02em;color:var(--ink)}
+.masthead .lede{margin:18px 0 0;font-size:1.06rem;color:var(--ink-2);max-width:66ch}
+.masthead .stamp{font-family:var(--mono);font-size:.74rem;color:var(--green-ink);
+  margin:22px 0 0;padding-top:14px;border-top:1px solid var(--line-2)}
+
+/* ---------- cartes ---------- */
+.sec-title{font-size:1.05rem;font-weight:700;margin:0 0 18px;color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:20px;margin:0 0 48px;align-items:stretch}
+.card{display:flex;flex-direction:column;height:100%;
+  background:var(--card);border:1px solid var(--line);
+  border-top:3px solid var(--green);border-radius:10px;padding:26px;
+  text-decoration:none;color:inherit;transition:border-color .16s,transform .16s}
+a.card:hover{border-color:var(--green);transform:translateY(-2px)}
+a.card:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+.card .no{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;color:var(--green-ink);
+  font-weight:700;margin-bottom:12px}
+.card h3{margin:0 0 10px;font-size:1.2rem;line-height:1.32;font-weight:700;
+  letter-spacing:-.012em;color:var(--ink)}
+.card p{margin:0 0 16px;font-size:.96rem;color:var(--ink-2)}
+.card .pills{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 16px}
+.pill{font-family:var(--mono);font-size:.68rem;background:var(--white);color:var(--green-ink);
+  border:1px solid var(--line-2);border-radius:20px;padding:3px 11px}
+.card .foot{margin-top:auto;font-size:.87rem;font-weight:700;color:var(--green);
+  display:flex;align-items:center;gap:7px}
+.card--soon{background:var(--card-2);border-top-color:var(--line-2);border-style:dashed}
+.card--soon .foot{color:var(--ink-2);font-weight:600}
+.badge{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--white);color:var(--ink-2);border:1px solid var(--line);
+  border-radius:4px;padding:3px 8px;margin-left:auto}
+
+/* ---------- article ---------- */
+article{max-width:780px}
+article h2{font-size:1.34rem;font-weight:700;letter-spacing:-.014em;margin:2.4em 0 .8em;
+  padding-bottom:.4em;border-bottom:2px solid var(--line)}
+article h3{font-size:1.08rem;font-weight:700;color:var(--green-ink);margin:1.9em 0 .5em}
+article h4{font-size:.96rem;font-weight:700;margin:1.6em 0 .45em}
+p{margin:0 0 1.1em}
+a{color:var(--green);text-decoration:none;border-bottom:1px solid rgba(47,107,69,.4)}
+a:hover{color:var(--green-ink)}
+strong{font-weight:700}
+
+/* ---------- images ---------- */
+figure{margin:0 0 1.8em}
+figure img{max-width:100%;height:auto;display:block;border:1px solid var(--line);
+  border-radius:8px;background:var(--white)}
+figcaption{font-size:.83rem;color:var(--ink-2);margin-top:10px;font-style:italic}
+img{max-width:100%;height:auto}
+
+/* ---------- code ---------- */
+code{font-family:var(--mono);font-size:.85em;background:var(--wash);border:1px solid var(--line);
+  border-radius:4px;padding:.1em .38em;color:var(--green-ink)}
+pre,pre.sourceCode{background:var(--code-bg);color:#e6efe2;border-radius:8px;padding:18px 20px;
+  overflow-x:auto;margin:0 0 1.5em;font-family:var(--mono);font-size:.83rem;line-height:1.62}
+pre code,pre.sourceCode code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+
+/* ---------- tableaux ---------- */
+table{width:100%;border-collapse:collapse;margin:0 0 1.7em;font-size:.92rem;
+  border:1px solid var(--line);border-radius:8px;overflow:hidden}
+thead th{background:var(--wash);color:var(--green-ink);font-weight:700;text-align:left;
+  padding:12px 14px;border-bottom:1px solid var(--line);font-size:.86rem}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+
+/* ---------- encadres ---------- */
+blockquote{background:var(--wash);border:1px solid var(--line);border-left:4px solid var(--green);
+  border-radius:0 8px 8px 0;padding:20px 24px 16px;margin:0 0 1.8em}
+blockquote p{margin:0 0 .6em;font-size:.99rem}
+blockquote p:last-child{margin-bottom:0}
+
+/* ---------- listes ---------- */
+ul,ol{margin:0 0 1.25em;padding-left:1.35em}
+li{margin-bottom:.4em}
+li::marker{color:var(--green)}
+
+/* ---------- retour ---------- */
+.back{display:inline-flex;align-items:center;gap:7px;font-size:.88rem;font-weight:700;
+  color:var(--green);background:var(--wash);border:1px solid var(--line);
+  border-radius:8px;padding:8px 15px;margin:0 0 28px}
+.back:hover{border-color:var(--green);color:var(--green-ink)}
+
+footer{border-top:1px solid var(--line);margin-top:56px;padding:22px 0 48px;
+  font-size:.83rem;color:var(--ink-2)}
+footer p{margin:0}
+
+@media (max-width:720px){
+  body{font-size:16px}
+  .wrap,.wrap-wide{padding:0 18px}
+  .grid{grid-template-columns:1fr;gap:16px}
+  .masthead{padding:40px 0 34px}
+  .masthead h1{font-size:1.72rem}
+  .card{padding:22px 20px 18px}
+  article h2{font-size:1.22rem}
+}
+@media print{
+  .masthead{background:none;border-bottom:1px solid #000}
+  .back{display:none}
+  a{color:#000;border:0}
+  pre,pre.sourceCode{background:#f2f2f2;color:#000}
+}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Ansible &middot; Proxmox VE &middot; cloud-init</p>
+    <h1>Déploiement automatisé d'une infrastructure multiservice avec
+Ansible</h1>
+    
+    <p class="stamp">Documentation technique &nbsp;·&nbsp; 07/10/2026</p>
+  </div>
+</header>
+<main class="wrap">
+<a class="back" href="index.html">&larr; Sommaire</a>
+<article>
+<blockquote>
+<p><strong>Contexte</strong></p>
+<p>NETSYS doit pouvoir reconstruire et exploiter son infrastructure sans
+dépendre d’une intervention manuelle. Cinq serveurs Debian portent cinq
+services distincts : serveur web, serveur DNS, serveur SFTP, base de
+données MariaDB et supervision.</p>
+<p>Le socle de ces machines est décrit dans le document précédent : une
+image système unique préparée, convertie en modèle, puis clonée cinq
+fois, avec une configuration injectée au premier démarrage.</p>
+<p>Le présent document couvre l’étape suivante. L’installation et la
+configuration des services sont décrites dans des rôles Ansible, puis
+appliquées par un playbook unique.</p>
+<p>La contrainte directrice tient en une phrase : ce qui n’est pas dans
+le dépôt n’existe pas. Une configuration posée à la main dans une
+machine n’est pas une configuration, c’est un état qui disparaîtra au
+prochain redéploiement.</p>
+</blockquote>
+<ul>
+<li><strong>Date</strong> : 7 octobre 2026</li>
+<li><strong>Contrôleur</strong> : poste d’administration, Ansible core
+2.20</li>
+<li><strong>Machines cibles</strong> : cinq, Debian 13, adressées de
+192.168.10.20 à 192.168.10.24</li>
+<li><strong>Rôles</strong> : six</li>
+<li><strong>Exigence de recette</strong> : la seconde exécution ne
+produit aucun changement</li>
+</ul>
+<hr />
+<h2 id="objectif-et-périmètre">1. Objectif et périmètre</h2>
+<p>Le projet doit permettre de passer d’un ensemble de machines vides à
+une infrastructure complète en une seule commande, de façon
+répétable.</p>
+<p>Le périmètre s’arrête à la mise en service des cinq services et à la
+vérification de leur fonctionnement. La sauvegarde centralisée et la
+supervision avancée ne sont pas traitées ici.</p>
+<p>Deux exigences structurent l’ensemble du travail.</p>
+<p>La première est la <strong>standardisation</strong> : chaque machine
+reçoit un socle identique, décrit une seule fois, puis son service
+propre. Aucune configuration n’est saisie manuellement sur une
+machine.</p>
+<p>La seconde est la <strong>reproductibilité vérifiable</strong>. Elle
+se mesure, elle ne se déclare pas. Le projet est donc exécuté deux fois
+de suite, et la seconde exécution doit afficher zéro modification.</p>
+<h2 id="architecture-du-dépôt">2. Architecture du dépôt</h2>
+<pre><code>ansible-project/
+├── ansible.cfg
+├── site.yml
+├── inventory/
+│   └── hosts.ini
+├── group_vars/
+│   └── all.yml
+└── roles/
+    ├── common/       tasks/  templates/
+    ├── web/          tasks/  templates/  handlers/
+    ├── dns/          tasks/  templates/  handlers/
+    ├── sftp/         tasks/  templates/  handlers/
+    ├── database/     tasks/
+    └── monitoring/   tasks/</code></pre>
+<p>Trois niveaux, trois responsabilités distinctes.</p>
+<p>L’<strong>inventaire</strong> décrit les machines et la façon de s’y
+connecter. C’est la seule source de vérité sur l’adressage.</p>
+<p>Les <strong>variables</strong> décrivent ce qui caractérise le projet
+: le nom du site, le domaine DNS, le compte SFTP, le nom de la base de
+données. Elles sont rassemblées dans un fichier unique, ce qui évite
+qu’une même valeur soit écrite à plusieurs endroits.</p>
+<p>Les <strong>rôles</strong> décrivent l’état attendu de chaque
+service. Un rôle contient ses tâches, ses gabarits et ses déclencheurs,
+et ne dépend d’aucun autre rôle.</p>
+<p>Le fichier <code>ansible.cfg</code> évite de répéter les options sur
+chaque commande. Il déclare l’emplacement de l’inventaire, impose la
+découverte silencieuse de l’interpréteur Python sur les machines cibles
+et désactive la création de fichiers de reprise.</p>
+<h2 id="inventaire-et-accès">3. Inventaire et accès</h2>
+<p>Chaque machine dispose de son propre groupe, ce qui permet d’adresser
+un service sans toucher aux autres.</p>
+<pre class="ini"><code>[web]
+web01 ansible_host=192.168.10.20
+
+[dns]
+dns01 ansible_host=192.168.10.21
+
+[sftp]
+srv01 ansible_host=192.168.10.22
+
+[database]
+db01 ansible_host=192.168.10.23
+
+[monitoring]
+mon01 ansible_host=192.168.10.24
+
+[all:vars]
+ansible_user=admin
+ansible_ssh_common_args=&#39;-o StrictHostKeyChecking=accept-new -o ProxyJump=root@192.168.1.150&#39;</code></pre>
+<p>Le compte d’administration <code>admin</code> est commun aux cinq
+machines. L’authentification se fait par clé, jamais par mot de passe :
+la clé publique a été injectée dans le système au moment du
+provisionnement, ce qui rend la chaîne complète sans saisie
+interactive.</p>
+<p><strong>Point de vigilance : accès depuis le poste
+d’administration.</strong></p>
+<p>Dans le laboratoire d’origine, le poste d’administration et les
+machines cibles partagent le même réseau. Ce n’est pas le cas ici : le
+poste est sur le réseau domestique, et les machines sont derrière un
+pont interne à l’hyperviseur, sans route entre les deux.</p>
+<p>Sans correction, chaque tentative de connexion reste en attente puis
+échoue. La solution retenue est une option de saut appliquée à tous les
+hôtes : le trafic sort par l’hyperviseur, qui voit les deux réseaux.
+Elle est déclarée une seule fois dans l’inventaire, donc invisible dans
+les commandes d’exécution.</p>
+<p>L’option d’acceptation des clés inconnues est jointe pour la même
+raison : après un reclonage, les empreintes des machines sont neuves et
+une validation interactive bloquerait une exécution automatisée.</p>
+<h2 id="orchestration">4. Orchestration</h2>
+<p>L’orchestration tient dans un seul fichier, <code>site.yml</code>, et
+se lit comme un sommaire.</p>
+<pre class="yaml"><code>---
+- name: Configuration commune
+  hosts: all
+  become: true
+  roles: [common]
+
+- name: Web
+  hosts: web
+  become: true
+  roles: [web]
+
+- name: DNS
+  hosts: dns
+  become: true
+  roles: [dns]
+
+- name: SFTP
+  hosts: sftp
+  become: true
+  roles: [sftp]
+
+- name: Base de donnees
+  hosts: database
+  become: true
+  roles: [database]
+
+- name: Supervision
+  hosts: monitoring
+  become: true
+  roles: [monitoring]</code></pre>
+<p>Le premier jeu s’applique à toutes les machines et pose le socle. Les
+cinq suivants ciblent chacun un groupe, donc une seule machine, et
+installent un service.</p>
+<p>L’élévation de privilèges est déclarée au niveau de chaque jeu. Elle
+est nécessaire pour installer des paquets, écrire dans la configuration
+système et manipuler les services.</p>
+<p>Cette organisation présente un intérêt pratique immédiat : on peut
+rejouer une partie précise du déploiement sans toucher au reste. Limiter
+l’exécution à une machine revient à la cibler par son nom.</p>
+<pre class="bash"><code>ansible-playbook site.yml --limit web01</code></pre>
+<p>C’est ce qui a permis de développer et de valider un rôle à la fois,
+sur une seule machine, avant de lancer l’exécution complète.</p>
+<h2 id="les-six-rôles">5. Les six rôles</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Rôle</th>
+<th>Cible</th>
+<th>Service</th>
+<th>Points remarquables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>common</code></td>
+<td>toutes</td>
+<td>socle</td>
+<td>paquets de base, nom d’hôte, fuseau horaire, fichier de
+correspondance noms et adresses</td>
+</tr>
+<tr>
+<td><code>web</code></td>
+<td>WEB01</td>
+<td>Apache</td>
+<td>page servie depuis un gabarit, redémarrage conditionnel</td>
+</tr>
+<tr>
+<td><code>dns</code></td>
+<td>DNS01</td>
+<td>Bind9</td>
+<td>zone locale, trois gabarits, redémarrage conditionnel</td>
+</tr>
+<tr>
+<td><code>sftp</code></td>
+<td>SRV01</td>
+<td>SSH / SFTP</td>
+<td>compte de service, cloisonnement, validation de configuration</td>
+</tr>
+<tr>
+<td><code>database</code></td>
+<td>DB01</td>
+<td>MariaDB</td>
+<td>base et compte applicatif, mot de passe posé à la création</td>
+</tr>
+<tr>
+<td><code>monitoring</code></td>
+<td>MON01</td>
+<td>exportateur de métriques</td>
+<td>attente active de l’écoute réseau</td>
+</tr>
+</tbody>
+</table>
+<h3 id="socle-commun">5.1 Socle commun</h3>
+<p>Le rôle <code>common</code> installe les paquets de base, dont
+l’agent de communication entre la machine invitée et l’hyperviseur,
+impose le fuseau horaire et génère le fichier de correspondance entre
+noms et adresses à partir de l’inventaire.</p>
+<p>Ce fichier est produit par un gabarit qui parcourt la liste des
+machines du projet. Chaque machine peut donc joindre les autres par leur
+nom, sans dépendre d’un service de résolution externe.</p>
+<p>Le rafraîchissement de la liste des paquets est borné dans le temps.
+Sans cette borne, la tâche se relancerait à chaque exécution et
+produirait un changement inutile.</p>
+<h3 id="serveur-web">5.2 Serveur web</h3>
+<p>Apache est installé, activé, et sert une page générée à partir du
+gabarit du projet. La page affiche le nom du site et le nom de la
+machine qui répond, ce qui permet de vérifier en une requête que la
+bonne machine a répondu.</p>
+<p>Le gabarit est associé à un déclencheur : si le contenu change, un
+redémarrage du service est programmé. Si le contenu est identique, rien
+ne se passe. C’est ce mécanisme qui rend la seconde exécution
+silencieuse.</p>
+<h3 id="serveur-dns">5.3 Serveur DNS</h3>
+<p>Bind9 est configuré avec une zone locale et un enregistrement qui
+pointe vers le serveur web. Trois gabarits sont déployés : les options
+générales, la déclaration de la zone, et le contenu de la zone.</p>
+<p>Trois points sont critiques.</p>
+<p>L’écoute réseau est restreinte à l’adresse de la machine et à la
+boucle locale. Par défaut, le service écoute uniquement en boucle locale
+et refuserait donc toute requête venant de l’extérieur.</p>
+<p>Le numéro de série de la zone est figé. Avec une valeur liée au
+temps, le fichier changerait à chaque exécution, le déclencheur se
+lancerait à chaque passage et l’exigence de reproductibilité serait
+perdue.</p>
+<p>Les requêtes sortantes sont transmises à un résolveur, faute de quoi
+la machine ne pourrait résoudre aucun nom externe.</p>
+<h3 id="serveur-de-fichiers">5.4 Serveur de fichiers</h3>
+<p>Le service repose sur SSH, déjà présent, auquel on ajoute une
+configuration dédiée dans le répertoire d’inclusion de la distribution
+plutôt qu’en modifiant le fichier fourni par le système.</p>
+<p>Un compte de service dédié est créé, sans shell de connexion, avec un
+espace cloisonné. Le cloisonnement ne cible que le groupe de ce compte :
+le compte d’administration conserve un accès complet, sans quoi on se
+priverait soi-même de la main sur la machine.</p>
+<p><strong>Point de vigilance : validation avant écriture.</strong></p>
+<p>La configuration SSH est validée par le démon lui-même avant d’être
+écrite à sa place définitive. Si la syntaxe est refusée, le fichier
+n’est pas déployé et le service n’est pas redémarré.</p>
+<p>Cette précaution n’est pas théorique. Une erreur de configuration du
+service d’accès distant se paie immédiatement : on perd la main sur la
+machine et il ne reste que la console de l’hyperviseur pour réparer.</p>
+<h3 id="base-de-données">5.5 Base de données</h3>
+<p>MariaDB est installé avec le pilote Python qui permet aux modules
+Ansible de dialoguer avec le serveur. Sans ce pilote, la création de la
+base échoue sur une erreur de dépendance difficile à interpréter.</p>
+<p>La base et le compte applicatif sont créés, avec les droits
+restreints à cette base. Le mot de passe n’est défini qu’à la création
+du compte : le rejouer à chaque exécution provoquerait un changement
+permanent.</p>
+<h3 id="supervision">5.6 Supervision</h3>
+<p>Un exportateur de métriques est installé et activé. Le service expose
+ses mesures sur le port prévu par le projet.</p>
+<p>Une tâche d’attente vérifie que le port répond réellement avant de
+clore le rôle. Un service déclaré démarré signifie que le système a
+lancé le processus, pas que l’application écoute. Cette vérification
+évite de découvrir une panne trois étapes plus loin.</p>
+<h2 id="variables-gabarits-et-déclencheurs">6. Variables, gabarits et
+déclencheurs</h2>
+<p>Les trois exigences de standardisation sont couvertes de la façon
+suivante.</p>
+<p><strong>Les variables</strong> sont rassemblées dans un fichier
+unique, organisé par rôle concerné. Aucune valeur n’est écrite en dur
+dans les tâches. Les variables de connexion restent dans l’inventaire :
+les dupliquer créerait deux sources de vérité qui finiraient par
+diverger.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Emploi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>site_name</code></td>
+<td>nom du site affiché sur la page web</td>
+</tr>
+<tr>
+<td><code>site_root</code></td>
+<td>répertoire servi par Apache</td>
+</tr>
+<tr>
+<td><code>web_port</code></td>
+<td>port d’écoute du service web</td>
+</tr>
+<tr>
+<td><code>dns_domain</code></td>
+<td>zone DNS gérée</td>
+</tr>
+<tr>
+<td><code>dns_record</code>, <code>dns_record_ip</code></td>
+<td>enregistrement publié vers le serveur web</td>
+</tr>
+<tr>
+<td><code>dns_forwarder</code></td>
+<td>résolveur utilisé pour les noms externes</td>
+</tr>
+<tr>
+<td><code>sftp_user</code>, <code>sftp_group</code>,
+<code>sftp_dir</code></td>
+<td>compte, groupe et racine du service de fichiers</td>
+</tr>
+<tr>
+<td><code>db_name</code>, <code>db_user</code>,
+<code>db_password</code></td>
+<td>base et compte applicatif</td>
+</tr>
+<tr>
+<td><code>monitoring_port</code></td>
+<td>port d’exposition des métriques</td>
+</tr>
+<tr>
+<td><code>common_packages</code>, <code>common_timezone</code></td>
+<td>socle commun</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Les gabarits</strong> sont au nombre de six : le fichier de
+correspondance noms et adresses du socle, la page web, les trois
+fichiers de configuration du service DNS, et la configuration du service
+de fichiers. Chacun produit un contenu déterministe : aucune date, aucun
+identifiant aléatoire, aucune valeur qui change d’une exécution à
+l’autre.</p>
+<p><strong>Les déclencheurs</strong> sont au nombre de trois :
+redémarrage d’Apache, redémarrage de Bind9 et redémarrage du service
+SSH. Chacun est associé aux gabarits qui le concernent.</p>
+<p>Un point de mécanique mérite d’être noté, parce qu’il se voit dans
+les relevés. Trois gabarits du rôle DNS changent au premier passage,
+donc trois notifications sont envoyées, et le déclencheur ne s’exécute
+<strong>qu’une seule fois</strong>, en fin de jeu. Ansible déduplique
+les demandes. Sans ce comportement, le service redémarrerait trois fois
+pour rien.</p>
+<h2 id="preuve-didempotence">7. Preuve d’idempotence</h2>
+<p>L’exigence de recette est la suivante : la seconde exécution ne doit
+provoquer aucun changement inutile.</p>
+<p>Le protocole retenu est celui qui a la plus grande valeur de
+démonstration. Les cinq machines ont été <strong>arrêtées, détruites,
+puis recréées</strong> à partir du modèle décrit dans le document
+précédent. L’infrastructure part donc d’un état vierge, sans aucune
+trace d’une exécution antérieure.</p>
+<p>Le projet est ensuite exécuté deux fois de suite.</p>
+<h3 id="première-exécution">7.1 Première exécution</h3>
+<table>
+<thead>
+<tr>
+<th>Machine</th>
+<th>Tâches réussies</th>
+<th>Modifications</th>
+<th>Échecs</th>
+<th>Injoignables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>web01</td>
+<td>11</td>
+<td><strong>6</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>dns01</td>
+<td>13</td>
+<td><strong>8</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>srv01</td>
+<td>15</td>
+<td><strong>9</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>db01</td>
+<td>11</td>
+<td><strong>6</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>mon01</td>
+<td>10</td>
+<td><strong>4</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>L’infrastructure complète est construite depuis un état vide, sur les
+cinq machines, sans intervention manuelle.</p>
+<h3 id="seconde-exécution">7.2 Seconde exécution</h3>
+<table>
+<thead>
+<tr>
+<th>Machine</th>
+<th>Tâches réussies</th>
+<th>Modifications</th>
+<th>Échecs</th>
+<th>Injoignables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>web01</td>
+<td>10</td>
+<td><strong>0</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>dns01</td>
+<td>12</td>
+<td><strong>0</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>srv01</td>
+<td>14</td>
+<td><strong>0</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>db01</td>
+<td>11</td>
+<td><strong>0</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>mon01</td>
+<td>10</td>
+<td><strong>0</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Aucune modification. L’état décrit dans le dépôt correspond
+exactement à l’état des machines.</p>
+<h3 id="lecture-des-relevés">7.3 Lecture des relevés</h3>
+<p>Le comptage des tâches réussies entre les deux exécutions porte une
+information intéressante, et elle confirme le bon fonctionnement des
+déclencheurs.</p>
+<table>
+<thead>
+<tr>
+<th>Machine</th>
+<th>1re exécution</th>
+<th>2e exécution</th>
+<th>Écart</th>
+<th>Déclencheur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>db01</td>
+<td>11</td>
+<td>11</td>
+<td>0</td>
+<td>aucun</td>
+</tr>
+<tr>
+<td>mon01</td>
+<td>10</td>
+<td>10</td>
+<td>0</td>
+<td>aucun</td>
+</tr>
+<tr>
+<td>web01</td>
+<td>11</td>
+<td>10</td>
+<td>1</td>
+<td>oui</td>
+</tr>
+<tr>
+<td>dns01</td>
+<td>13</td>
+<td>12</td>
+<td>1</td>
+<td>oui</td>
+</tr>
+<tr>
+<td>srv01</td>
+<td>15</td>
+<td>14</td>
+<td>1</td>
+<td>oui</td>
+</tr>
+</tbody>
+</table>
+<p>L’écart vaut exactement un sur les trois machines dont un rôle porte
+un déclencheur, et zéro sur les deux autres.</p>
+<p>Autrement dit : au premier passage, le gabarit a changé, donc le
+service a été redémarré, donc une tâche supplémentaire a été comptée. Au
+second passage, le gabarit était identique, donc aucune notification n’a
+été envoyée, donc aucune tâche supplémentaire.</p>
+<p>C’est la démonstration que les déclencheurs sont bien conditionnés
+par un changement réel, et non exécutés systématiquement.</p>
+<h2 id="vérification-des-services">8. Vérification des services</h2>
+<p>Chaque service est vérifié par une commande, conformément au cahier
+des charges.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Machine</th>
+<th>Service</th>
+<th>Vérification</th>
+<th>Résultat attendu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WEB01</td>
+<td>Apache</td>
+<td>requête sur le port 80</td>
+<td>page du site servie</td>
+</tr>
+<tr>
+<td>DNS01</td>
+<td>Bind9</td>
+<td>interrogation de la zone locale</td>
+<td>réponse faisant autorité</td>
+</tr>
+<tr>
+<td>SRV01</td>
+<td>SFTP</td>
+<td>ouverture d’une session</td>
+<td>session établie, répertoire personnel</td>
+</tr>
+<tr>
+<td>DB01</td>
+<td>MariaDB</td>
+<td>état du service</td>
+<td>service actif</td>
+</tr>
+<tr>
+<td>MON01</td>
+<td>exportateur</td>
+<td>ports en écoute et réponse</td>
+<td>port exposé, service actif</td>
+</tr>
+</tbody>
+</table>
+<p>Les relevés obtenus sont les suivants.</p>
+<p><strong>Serveur web.</strong> La requête renvoie la page attendue,
+avec le nom du site et l’adresse de la machine qui a répondu. Le service
+est fonctionnel depuis l’extérieur de la machine.</p>
+<p><strong>Serveur DNS.</strong> L’interrogation de la zone locale
+renvoie un statut sans erreur, avec le drapeau <em>authoritative</em>,
+ce qui confirme que la réponse vient bien de la zone du projet et non
+d’un résolveur intermédiaire. L’enregistrement publié pointe vers
+l’adresse du serveur web.</p>
+<p><strong>Serveur de fichiers.</strong> Une session est établie avec le
+compte d’administration, sans mot de passe, et le répertoire courant
+correspond à son répertoire personnel. Le cloisonnement du compte de
+service, lui, ne concerne pas ce compte.</p>
+<p><strong>Base de données.</strong> Le service est actif et à l’écoute
+sur son port. La base et le compte applicatif ont été créés par le
+rôle.</p>
+<p><strong>Supervision.</strong> Le port dédié est en écoute et le
+service répond. Le relevé des ports confirme l’exposition attendue.</p>
+<h2 id="points-de-vigilance-récapitulés">9. Points de vigilance
+récapitulés</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Constat</th>
+<th>Conséquence</th>
+<th>Mesure appliquée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Le poste d’administration n’a pas de route vers le réseau des
+machines</td>
+<td>Toutes les connexions restent en attente</td>
+<td>Option de saut déclarée dans l’inventaire</td>
+</tr>
+<tr>
+<td>Les empreintes SSH changent après un reclonage</td>
+<td>Connexion refusée sur conflit d’empreinte</td>
+<td>Acceptation des clés inconnues, purge préalable</td>
+</tr>
+<tr>
+<td>Une erreur de configuration SSH coupe l’accès distant</td>
+<td>Perte de la main sur la machine</td>
+<td>Validation de la syntaxe avant écriture</td>
+</tr>
+<tr>
+<td>Le service DNS n’écoute qu’en boucle locale par défaut</td>
+<td>Aucune réponse aux requêtes externes</td>
+<td>Écoute explicitement étendue à l’adresse de la machine</td>
+</tr>
+<tr>
+<td>Un numéro de série de zone variable change à chaque passage</td>
+<td>Déclencheur relancé et reproductibilité perdue</td>
+<td>Numéro de série figé</td>
+</tr>
+<tr>
+<td>Un mot de passe rejoué à chaque exécution produit un changement</td>
+<td>Second passage non conforme</td>
+<td>Mot de passe posé uniquement à la création</td>
+</tr>
+<tr>
+<td>Les modules de base de données exigent un pilote Python</td>
+<td>Échec sur erreur de dépendance</td>
+<td>Pilote installé avec le serveur</td>
+</tr>
+<tr>
+<td>Un service déclaré démarré n’écoute pas forcément</td>
+<td>Panne découverte trop tard</td>
+<td>Attente active de l’écoute réseau</td>
+</tr>
+<tr>
+<td>Le rafraîchissement de la liste des paquets est non borné</td>
+<td>Changement à chaque exécution</td>
+<td>Rafraîchissement borné dans le temps</td>
+</tr>
+<tr>
+<td>Le service SSH est réparti sur plusieurs fichiers de
+configuration</td>
+<td>Fichier fourni par la distribution écrasé</td>
+<td>Configuration ajoutée dans le répertoire d’inclusion</td>
+</tr>
+</tbody>
+</table>
+<h2 id="annexe-a-séquence-de-déploiement">Annexe A — Séquence de
+déploiement</h2>
+<pre class="bash"><code># Vérification de l&#39;inventaire
+ansible-inventory -i inventory/hosts.ini --graph
+ansible -i inventory/hosts.ini all -m ping
+
+# Contrôle de syntaxe sans exécution
+ansible-playbook site.yml --syntax-check
+ansible-playbook site.yml --list-tasks
+
+# Développement d&#39;un rôle, sur une seule machine
+ansible-playbook site.yml --limit web01
+
+# Première exécution complète
+ansible-playbook -i inventory/hosts.ini site.yml
+
+# Seconde exécution immédiate : contrôle de reproductibilité
+ansible-playbook -i inventory/hosts.ini site.yml</code></pre>
+<p>Commandes de vérification des services.</p>
+<pre class="bash"><code>ansible web01 -a &quot;curl -s -o /dev/null -w %{http_code} http://127.0.0.1&quot;
+ansible dns01 -a &quot;dig @192.168.10.21 www.netsys.test&quot;
+sftp -o ProxyJump=root@192.168.1.150 admin@192.168.10.22
+ansible db01 -a &quot;systemctl status mariadb --no-pager&quot;
+ansible mon01 -a &quot;ss -lntup&quot;</code></pre>
+<h2 id="annexe-b-ce-que-la-démarche-démontre">Annexe B — Ce que la
+démarche démontre</h2>
+<p>La valeur de ce travail ne tient pas au fait que les cinq services
+fonctionnent. Elle tient au fait qu’ils peuvent être <strong>détruits et
+reconstruits</strong>.</p>
+<p>Les cinq machines ont été supprimées, puis recréées depuis un modèle,
+puis configurées par une seule commande. Aucune configuration n’a été
+retapée, aucune mémoire n’a été sollicitée.</p>
+<p>C’est aussi ce qui rend le diagnostic possible. Quand une dérive est
+introduite sur une machine, il n’y a pas à deviner ce qu’elle contenait
+: le dépôt décrit l’état cible, la commande le rétablit, et la relecture
+des relevés confirme que le retour à l’état attendu a bien eu lieu.</p>
+<p>La documentation du socle et celle du déploiement forment une chaîne
+complète : une machine préparée une fois, clonée en cinq exemplaires,
+puis configurée par le code. Reconstruire l’infrastructure à l’identique
+revient à rejouer la séquence, pas à reproduire un savoir-faire.</p>
+</article>
+</main>
+<footer><div class="wrap"><p>Dernière mise à jour : 07/10/2026</p></div></footer>
+</body>
+</html>

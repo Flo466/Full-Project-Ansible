@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>{{ site_name }}</title>
+</head>
+<body>
+  <h1>Page {{ site_name }} accessible</h1>
+  <p>Serveur : {{ inventory_hostname }} ({{ ansible_facts['default_ipv4']['address'] }})</p>
+  <p>Port d'ecoute : {{ web_port }}</p>
+</body>
+</html>

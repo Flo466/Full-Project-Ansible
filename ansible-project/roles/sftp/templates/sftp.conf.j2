@@ -1,0 +1,6 @@
+# Chroot SFTP pour le groupe dedie
+Match Group {{ sftp_group }}
+    ChrootDirectory {{ sftp_dir }}/%u
+    ForceCommand internal-sftp
+    AllowTcpForwarding no
+    X11Forwarding no

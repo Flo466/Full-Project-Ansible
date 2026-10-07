@@ -1,3 +1,9 @@
 *.old
 *~
 .DS_Store
+
+# Ansible
+*.retry
+collections/
+vault_pass.txt
+.vault_pass

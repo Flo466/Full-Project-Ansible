@@ -1,0 +1,17 @@
+---
+- name: Installation de l exportateur de metriques
+  ansible.builtin.apt:
+    name: prometheus-node-exporter
+    state: present
+
+- name: Activation du service de supervision
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    state: started
+    enabled: true
+
+- name: Verification de l ecoute sur le port de supervision
+  ansible.builtin.wait_for:
+    port: "{{ monitoring_port }}"
+    host: 127.0.0.1
+    timeout: 15

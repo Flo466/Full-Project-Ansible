@@ -1,0 +1,11 @@
+$TTL 604800
+@   IN  SOA ns1.{{ dns_domain }}. admin.{{ dns_domain }}. (
+        1       ; Serial
+        604800  ; Refresh
+        86400   ; Retry
+        2419200 ; Expire
+        604800 ) ; Negative Cache TTL
+;
+@       IN  NS   ns1.{{ dns_domain }}.
+ns1     IN  A    {{ ansible_host }}
+{{ dns_record }}    IN  A    {{ dns_record_ip }}

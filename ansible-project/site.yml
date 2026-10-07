@@ -1,0 +1,30 @@
+---
+- name: Configuration commune
+  hosts: all
+  become: true
+  roles: [common]
+
+- name: Web
+  hosts: web
+  become: true
+  roles: [web]
+
+- name: DNS
+  hosts: dns
+  become: true
+  roles: [dns]
+
+- name: SFTP
+  hosts: sftp
+  become: true
+  roles: [sftp]
+
+- name: Base de donnees
+  hosts: database
+  become: true
+  roles: [database]
+
+- name: Supervision
+  hosts: monitoring
+  become: true
+  roles: [monitoring]

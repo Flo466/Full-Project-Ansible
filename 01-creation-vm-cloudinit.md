@@ -99,7 +99,7 @@ qm create 9001 --name tpl-debian13 \
   --scsihw virtio-scsi-single \
   --net0 virtio,bridge=vmbr1 \
   --agent enabled=1 \
-  --pool TP-Ansible
+  --pool TP-Kassouri
 ```
 
 Le contrôleur de disque retenu est `virtio-scsi-single`. Le contrôleur générique `virtio-scsi-pci` déclenche au démarrage un avertissement indiquant que l'option `iothread` n'est pas valide sur ce type de contrôleur. Cet avertissement n'empêche pas le fonctionnement, mais il est hérité par chaque clone et finit par saturer les journaux.
@@ -219,7 +219,7 @@ La machine doit être arrêtée. La conversion la fait passer en lecture seule e
 for i in 0 1 2 3 4; do
   qm clone 9001 $((400+i)) \
     --name $(echo web01 dns01 srv01 db01 mon01 | cut -d' ' -f$((i+1))) \
-    --full 0 --pool TP-Ansible
+    --full 0 --pool TP-Kassouri
 done
 ```
 
@@ -290,9 +290,9 @@ ssh-keygen -R 192.168.10.20
 
 ### 11.4 Nom d'hôte
 
-Proxmox ne transmet pas le nom de la machine au système invité. Les cinq clones portent donc encore le nom du modèle dans leur système d'exploitation.
+Contrôle effectué après le clonage : les cinq machines portaient déjà le nom de leur machine dans leur système, sans intervention. Le nom transmis au clone est bien repris par l'invite de configuration.
 
-Ce point n'est pas un défaut de la chaîne de provisionnement, c'est une limite de l'injection cloud-init dans cette configuration. Il est traité par l'outillage de configuration, dont le rôle commun pose le nom d'hôte et régénère le fichier de correspondance noms et adresses.
+Rien ne garantit pour autant que ce comportement survive à un changement d'image ou à un clonage réalisé autrement. C'est pourquoi l'outillage de configuration impose explicitement le nom d'hôte et régénère le fichier de correspondance noms et adresses. Une tâche qui impose un état déjà présent ne coûte rien, puisque elle ne modifie rien.
 
 ## 12. Points de vigilance récapitulés
 
@@ -306,7 +306,7 @@ Ce point n'est pas un défaut de la chaîne de provisionnement, c'est une limite
 | L'option d'acceptation SSH ne tolère pas un conflit | Connexion refusée | Purge de l'empreinte périmée |
 | Le contrôleur `virtio-scsi-pci` rejette `iothread` | Avertissement hérité par chaque clone | Contrôleur `virtio-scsi-single` |
 | Aucun stockage n'a le contenu `snippets` | Inutilisable pour un fichier cloud-init externe | Lecteur cloud-init standard |
-| Proxmox ne transmet pas le nom de la machine | Clones nommés comme le modèle | Nom d'hôte posé par l'outillage de configuration |
+| Le nom d'hôte dépend du mode de provisionnement | Divergence possible selon l'origine de l'image | Nom d'hôte imposé par le rôle commun, de façon idempotente |
 
 ## Annexe A — Séquence complète
 
@@ -320,7 +320,7 @@ sha512sum -c --ignore-missing SHA512SUMS
 # 2. Déclaration de la machine modèle
 qm create 9001 --name tpl-debian13 --memory 1024 --cores 2 --ostype l26 \
   --scsihw virtio-scsi-single --net0 virtio,bridge=vmbr1 \
-  --agent enabled=1 --pool TP-Ansible
+  --agent enabled=1 --pool TP-Kassouri
 
 # 3. Import du disque système au format qcow2
 qm importdisk 9001 /root/debian-13-genericcloud-amd64.qcow2 ssd-pcie-externe --format qcow2
@@ -353,7 +353,7 @@ qm template 9001
 for i in 0 1 2 3 4; do
   qm clone 9001 $((400+i)) \
     --name $(echo web01 dns01 srv01 db01 mon01 | cut -d' ' -f$((i+1))) \
-    --full 0 --pool TP-Ansible
+    --full 0 --pool TP-Kassouri
 done
 
 # 10. Adressage individuel
