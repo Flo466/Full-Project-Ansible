@@ -1,135 +1,1090 @@
-/* =====================================================================
-   Projet Ansible — feuille de style commune
-   Extraite des pages : le CSS vivait auparavant dans un bloc <style>
-   duplique dans le <head> de chaque page. Une seule source desormais.
-   Palette : blanc, verts, une seule largeur de 860 px.
-   ===================================================================== */
+:root {
+  /* ---------- palette claire : blanc, verts, ombres portees ---------- */
+  --bg: #ffffff; /* fond de page */
+  --paper: #ffffff; /* alias : le fond est blanc partout */
+  --wash: #f7faf8; /* vert tres pale : encadres, en-tetes de tableau */
+  --white: #ffffff;
+  --ink: #17211c; /* texte principal */
+  --ink-2: #5b6b62; /* texte secondaire */
+  --green: #2e6a4f; /* feuille : liens, accents */
+  --green-ink: #12362a; /* foret : titres et labels */
+  --green-soft: #e8f1eb; /* vert delave : pastilles, puces */
 
-:root{
-  /* ---------- palette : pastel vert, texte noir ---------- */
-  --hero:#e3efdb; --card:#eaf3e4; --card-2:#f4f9f0; --wash:#f1f7ed;
-  --line:#cfe0c2; --line-2:#b7d0a6;
-  --green:#2f6b45; --green-ink:#1c3c26;
-  --white:#ffffff; --ink:#14180f; --ink-2:#4d5648;
-  --code-bg:#16201a;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
-  /* UNE SEULE largeur pour tout le site : bandeau, contenu, cartes */
-  --col:860px;
+  /* les surfaces : plus de verre, du blanc plein */
+  --glass: #ffffff;
+  --glass-strong: #ffffff;
+  --glass-thin: #ffffff;
+  --glass-line: #e5ece7;
+  --line: #e5ece7;
+  --line-2: #d2ded6;
+  --blur: 0px;
+
+  /* ombres portees : trois niveaux, du plus discret au plus marque */
+  --shadow-s: 0 1px 2px rgba(18, 54, 42, 0.05), 0 4px 10px -6px rgba(18, 54, 42, 0.1);
+  --shadow-m: 0 2px 4px rgba(18, 54, 42, 0.05), 0 14px 28px -14px rgba(18, 54, 42, 0.16);
+  /* reflets du verre neutralises : les box-shadow restent valides, sans effet */
+  --sheen: 0 0 0 0 rgba(0, 0, 0, 0);
+  --glass-inner: 0 0 0 0 rgba(0, 0, 0, 0);
+
+  /* accents secondaires, conserves tres pale pour les filets */
+  --clay: rgba(46, 106, 79, 0.35);
+  --sage: rgba(46, 106, 79, 0.55);
+  --ochre: rgba(46, 106, 79, 0.25);
+  --sky: rgba(46, 106, 79, 0.4);
+
+  --code-bg: #10231b;
+  --sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --col: 840px;
+  --col-wide: 1040px;
+  --col-fig: 1100px;
+
+  color-scheme: light;
 }
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-::selection{background:#cfe6c0;color:var(--ink)}
-body{margin:0;background:var(--white);color:var(--ink);font-family:var(--sans);
-  font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased}
-
-/* un seul conteneur, partage par le bandeau ET le contenu */
-.wrap{max-width:var(--col);margin:0 auto;padding:0 24px}
-
-/* ---------- bandeau ---------- */
-.masthead{background:var(--hero);border-bottom:3px solid var(--card);padding:52px 0 46px;margin-bottom:40px}
-.masthead .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--green-ink);font-weight:700;margin:0 0 16px}
-.masthead h1{margin:0;font-size:2.2rem;line-height:1.24;font-weight:700;
-  letter-spacing:-.02em;color:var(--ink)}
-.masthead .lede{margin:18px 0 0;font-size:1.05rem;color:var(--ink-2);max-width:62ch}
-.masthead .stamp{font-family:var(--mono);font-size:.74rem;color:var(--green-ink);
-  margin:22px 0 0;padding-top:14px;border-top:1px solid var(--line-2)}
-
-/* ---------- sommaire par cartes ---------- */
-.sec-title{font-size:1.05rem;font-weight:700;margin:0 0 18px;color:var(--ink)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-  gap:18px;margin:0 0 46px;align-items:stretch}
-.card{display:flex;flex-direction:column;height:100%;
-  background:var(--card);border:1px solid var(--line);
-  border-top:3px solid var(--green);border-radius:10px;padding:24px;
-  text-decoration:none;color:inherit;transition:border-color .16s,transform .16s}
-a.card:hover{border-color:var(--green);transform:translateY(-2px)}
-a.card:focus-visible{outline:3px solid var(--green);outline-offset:3px}
-.card .no{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;color:var(--green-ink);
-  font-weight:700;margin-bottom:12px}
-.card h3{margin:0 0 10px;font-size:1.16rem;line-height:1.34;font-weight:700;
-  letter-spacing:-.012em;color:var(--ink)}
-.card p{margin:0 0 16px;font-size:.95rem;color:var(--ink-2)}
-.card .pills{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 16px}
-.pill{font-family:var(--mono);font-size:.68rem;background:var(--white);color:var(--green-ink);
-  border:1px solid var(--line-2);border-radius:20px;padding:3px 11px}
-.card .foot{margin-top:auto;font-size:.87rem;font-weight:700;color:var(--green);
-  display:flex;align-items:center;gap:7px}
-/* la carte "a venir" occupe la ligne entiere : elle ne casse pas l'alignement */
-.card--soon{grid-column:1 / -1;background:var(--card-2);
-  border-top-color:var(--line-2);border-style:dashed}
-.card--soon .foot{color:var(--ink-2);font-weight:600}
-.badge{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
-  background:var(--white);color:var(--ink-2);border:1px solid var(--line);
-  border-radius:4px;padding:3px 8px;margin-left:auto}
-
-/* ---------- corps d'article : meme largeur que le reste ---------- */
-article{max-width:100%}
-article h2{font-size:1.32rem;font-weight:700;letter-spacing:-.014em;margin:2.4em 0 .8em;
-  padding-bottom:.4em;border-bottom:2px solid var(--line)}
-article h3{font-size:1.07rem;font-weight:700;color:var(--green-ink);margin:1.9em 0 .5em}
-article h4{font-size:.96rem;font-weight:700;margin:1.6em 0 .45em}
-p{margin:0 0 1.1em}
-a{color:var(--green);text-decoration:none;border-bottom:1px solid rgba(47,107,69,.4)}
-a:hover{color:var(--green-ink)}
-strong{font-weight:700}
-
-/* ---------- images ---------- */
-figure{margin:0 0 1.8em}
-figure img{max-width:100%;height:auto;display:block;border:1px solid var(--line);
-  border-radius:8px;background:var(--white)}
-figcaption{font-size:.83rem;color:var(--ink-2);margin-top:10px;font-style:italic}
-img{max-width:100%;height:auto}
-
-/* ---------- code ---------- */
-code{font-family:var(--mono);font-size:.85em;background:var(--wash);border:1px solid var(--line);
-  border-radius:4px;padding:.1em .38em;color:var(--green-ink)}
-pre,pre.sourceCode{background:var(--code-bg);color:#e6efe2;border-radius:8px;padding:18px 20px;
-  overflow-x:auto;margin:0 0 1.5em;font-family:var(--mono);font-size:.82rem;line-height:1.62}
-pre code,pre.sourceCode code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
-
-/* ---------- tableaux ---------- */
-table{width:100%;border-collapse:collapse;margin:0 0 1.7em;font-size:.91rem;
-  border:1px solid var(--line);border-radius:8px;overflow:hidden}
-thead th{background:var(--wash);color:var(--green-ink);font-weight:700;text-align:left;
-  padding:12px 14px;border-bottom:1px solid var(--line);font-size:.85rem}
-td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
-tbody tr:last-child td{border-bottom:0}
-
-/* ---------- encadres ---------- */
-blockquote{background:var(--wash);border:1px solid var(--line);border-left:4px solid var(--green);
-  border-radius:0 8px 8px 0;padding:20px 24px 16px;margin:0 0 1.8em}
-blockquote p{margin:0 0 .6em;font-size:.99rem}
-blockquote p:last-child{margin-bottom:0}
-
-/* ---------- listes ---------- */
-ul,ol{margin:0 0 1.25em;padding-left:1.35em}
-li{margin-bottom:.4em}
-li::marker{color:var(--green)}
-
-/* ---------- retour ---------- */
-.back{display:inline-flex;align-items:center;gap:7px;font-size:.88rem;font-weight:700;
-  color:var(--green);background:var(--wash);border:1px solid var(--line);
-  border-radius:8px;padding:8px 15px;margin:0 0 28px}
-.back:hover{border-color:var(--green);color:var(--green-ink)}
-
-footer{border-top:1px solid var(--line);margin-top:56px;padding:22px 0 48px;
-  font-size:.83rem;color:var(--ink-2)}
-footer p{margin:0}
-
-@media (max-width:720px){
-  body{font-size:16px}
-  .wrap{padding:0 18px}
-  .grid{grid-template-columns:1fr;gap:16px}
-  .masthead{padding:40px 0 34px}
-  .masthead h1{font-size:1.7rem}
-  .card{padding:22px 20px 18px}
-  article h2{font-size:1.2rem}
+* {
+  box-sizing: border-box;
 }
-@media print{
-  .masthead{background:none;border-bottom:1px solid #000}
-  .back{display:none}
-  a{color:#000;border:0}
-  pre,pre.sourceCode{background:#f2f2f2;color:#000}
+html {
+  background-color: var(--paper);
+  -webkit-text-size-adjust: 100%;
+}
+::selection {
+  background: rgba(143, 191, 162, 0.35);
+  color: var(--ink);
+}
+
+/* fond : quatre halos (sauge, pierre, argile, ocre) fixes derriere le verre */
+body {
+  position: relative;
+  margin: 0;
+  min-height: 100vh;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* lien d'evitement : visible seulement au clavier */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+}
+.skip:focus {
+  left: 16px;
+  top: 16px;
+  z-index: 10;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--white);
+  border: 1px solid var(--line-2);
+  color: var(--green-ink);
+  font-weight: 700;
+}
+
+.wrap {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.wrap-wide {
+  max-width: var(--col-wide);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+/* page d'accueil : colonne plus large, la grille respire */
+.home .wrap,
+.home .wrap-wide {
+  max-width: var(--col-wide);
+}
+
+/* ============ bandeau d'en-tete : grand panneau de verre ============ */
+.masthead {
+  padding: 30px 0 0;
+  margin: 0 0 38px;
+}
+.masthead > .wrap,
+.masthead > .wrap-wide {
+  position: relative;
+  isolation: isolate; /* le reflet passe sous le texte */
+  padding: 44px 44px 40px;
+  border-radius: 30px;
+  background: var(--glass);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-m), var(--sheen), var(--glass-inner);
+  overflow: hidden;
+}
+.masthead .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green-ink);
+  font-weight: 700;
+  margin: 0 0 18px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: var(--glass-thin);
+  border: 1px solid var(--line);
+}
+.masthead h1 {
+  margin: 0;
+  font-size: clamp(1.85rem, 3.6vw, 2.55rem);
+  line-height: 1.16;
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  color: var(--green-ink);
+  text-wrap: balance;
+}
+/* degrade de texte : reserve a l'accueil (les titres generes contiennent des
+   emojis, et un emoji dans un texte decoupe en degrade ressort en silhouette) */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .home .masthead h1 {
+    background: linear-gradient(100deg, #143a2b, #2f6f52 50%, #4d7186);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+.masthead .lede {
+  margin: 16px 0 0;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+.masthead .stamp {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--green-ink);
+  margin: 22px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-2);
+}
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 24px 0 0;
+}
+.contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-decoration: none;
+  background: var(--glass-thin);
+  color: var(--green-ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 15px;
+  box-shadow: var(--sheen);
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+.contact a:hover {
+  transform: translateY(-1px);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+/* accueil : en-tete sur deux colonnes des que la place le permet */
+@media (min-width: 880px) {
+  .home .masthead > .wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+    grid-template-areas:
+      "eyebrow eyebrow"
+      "title   lede"
+      "title   contact";
+    align-items: start;
+    column-gap: 46px;
+    padding: 42px 46px 40px;
+  }
+  .home .masthead .eyebrow {
+    grid-area: eyebrow;
+    justify-self: start;
+    margin: 0 0 22px;
+  }
+  .home .masthead h1 {
+    grid-area: title;
+    font-size: clamp(1.9rem, 3vw, 2.4rem);
+  }
+  .home .masthead .lede {
+    grid-area: lede;
+    margin: 6px 0 0;
+    max-width: none;
+  }
+  .home .masthead .contact {
+    grid-area: contact;
+    margin: 22px 0 0;
+  }
+}
+
+/* ============ tete de section ============ */
+.sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.sec-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green-ink);
+}
+.sec-title::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: linear-gradient(140deg, var(--sage), var(--clay));
+  box-shadow: 0 0 0 4px rgba(143, 191, 162, 0.22);
+}
+.sec-hint {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+}
+
+/* ============ sommaire par cartes ============ */
+/* 3 colonnes sur grand ecran, 2 sur laptop, 1 sur mobile : automatique */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  gap: 16px;
+  margin: 0 0 46px;
+  align-items: stretch; /* toutes les cartes d'une ligne ont la meme hauteur */
+}
+/* carte unique : on evite une ligne de texte trop longue */
+.grid:has(> :only-child) {
+  grid-template-columns: 1fr;
+  max-width: 620px;
+}
+
+/* hauteur 100% -> les cartes d'une meme ligne sont rigoureusement identiques */
+.card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 22px 22px 20px;
+  border-radius: 24px;
+  text-decoration: none;
+  color: inherit;
+  background: var(--glass);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-s), var(--sheen), var(--glass-inner);
+  transition:
+    transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--green);
+  opacity: 0.35;
+  transition: opacity 0.25s ease;
+}
+a.card:hover,
+a.card:focus-visible {
+  transform: translateY(-4px);
+  border-color: var(--line-2);
+  box-shadow:
+    0 34px 64px -30px rgba(24, 42, 33, 0.5),
+    var(--sheen),
+    var(--glass-inner);
+}
+/* le halo glisse doucement : le verre parait vivant sans clignoter */
+a.card:hover::before,
+a.card:focus-visible::before {
+  transform: scale(1.07);
+}
+a.card:hover::after,
+a.card:focus-visible::after {
+  opacity: 1;
+}
+a.card:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+.card__icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 12px;
+  font-size: 1.05rem;
+  line-height: 1;
+  border-radius: 13px;
+  background: var(--green-soft);
+  border: 1px solid var(--line-2);
+  box-shadow:
+    0 8px 16px -12px rgba(24, 42, 33, 0.8),
+    var(--sheen);
+}
+.card__tag {
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-size: 0.61rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green-ink);
+  opacity: 0.85;
+}
+.card h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.card p {
+  margin: 0 0 14px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.card .pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 16px;
+}
+.pill {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  background: var(--green-soft);
+  color: var(--green-ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+/* margin-top:auto colle le lien en bas, donc tous les pieds de carte s'alignent */
+.card__foot {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.card__foot span {
+  transition: transform 0.2s ease;
+}
+a.card:hover .card__foot span,
+a.card:focus-visible .card__foot span {
+  transform: translate(2px, -2px);
+}
+
+/* variante "a venir" : verre plus pale, arete en pointilles */
+.card--soon {
+  background: var(--glass-thin);
+  border: 1px dashed var(--line-2);
+}
+.card--soon::after {
+  opacity: 0.22;
+}
+.card--soon .card__icon {
+  filter: saturate(0.75);
+}
+.card--soon .card__foot {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+/* ============ competences : tuiles de verre ============ */
+.skills {
+  margin: 0 0 46px;
+}
+.skills__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+.skill {
+  margin: 0;
+  padding: 16px 16px 15px;
+  border-radius: 18px;
+  background: var(--glass-thin);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-s), var(--sheen);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.skill:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 20px 34px -22px rgba(24, 42, 33, 0.45),
+    var(--sheen);
+}
+.skill__icon {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.skill h3 {
+  margin: 0 0 3px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: var(--green-ink);
+}
+.skill p {
+  margin: 0;
+  font-size: 0.79rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* ============ encadre de fin : verre opaque, lecture longue ============ */
+.note {
+  margin: 0 0 8px;
+  padding: 24px 26px 22px;
+  border-radius: 24px;
+  background: var(--wash);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-s), var(--sheen), var(--glass-inner);
+}
+.note h2 {
+  margin: 0 0 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--green-ink);
+}
+.note__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px 20px;
+}
+.note__list li {
+  margin: 0;
+  padding-left: 14px;
+  border-left: 2px solid rgba(46, 106, 79, 0.25);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.note__list strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.79rem;
+  letter-spacing: 0.02em;
+  color: var(--green-ink);
+}
+
+/* ============ corps d'article (pages projets) ============ */
+article {
+  max-width: 780px;
+}
+article h2 {
+  margin: 2.4em 0 0.8em;
+  padding-bottom: 0.4em;
+  font-size: 1.34rem;
+  font-weight: 700;
+  letter-spacing: -0.014em;
+  border-bottom: 1px solid var(--line);
+}
+article h3 {
+  margin: 1.9em 0 0.5em;
+  font-size: 1.07rem;
+  font-weight: 700;
+  color: var(--green-ink);
+}
+article h4 {
+  margin: 1.6em 0 0.45em;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+p {
+  margin: 0 0 1.1em;
+}
+a {
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(46, 106, 79, 0.35);
+}
+a:hover {
+  color: var(--green-ink);
+  border-bottom-color: var(--green-ink);
+}
+strong {
+  font-weight: 700;
+}
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 2em 0;
+}
+
+/* ============ images ============ */
+figure {
+  margin: 0 0 1.8em;
+}
+figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow-s);
+}
+figcaption {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--ink-2);
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ============ code ============ */
+code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.1em 0.38em;
+  color: var(--green-ink);
+}
+pre,
+pre.sourceCode {
+  background: var(--code-bg);
+  color: #dff0e6;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 18px 20px;
+  overflow-x: auto;
+  margin: 0 0 1.5em;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.62;
+  box-shadow: var(--shadow-s);
+}
+pre code,
+pre.sourceCode code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* ============ tableaux : verre opaque ============ */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0 0 1.7em;
+  font-size: 0.92rem;
+  background: var(--glass-strong);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-s);
+}
+thead th {
+  background: var(--wash);
+  color: var(--green-ink);
+  font-weight: 700;
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.85rem;
+}
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ============ encadres ============ */
+blockquote {
+  background: var(--glass-strong);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--green);
+  border-radius: 0 14px 14px 0;
+  padding: 20px 24px 16px;
+  margin: 0 0 1.8em;
+  box-shadow: var(--shadow-s);
+}
+blockquote p {
+  margin: 0 0 0.6em;
+  font-size: 0.98rem;
+}
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============ listes ============ */
+ul,
+ol {
+  margin: 0 0 1.25em;
+  padding-left: 1.35em;
+}
+li {
+  margin-bottom: 0.4em;
+}
+li::marker {
+  color: var(--green);
+}
+
+/* ============ bouton retour : pastille de verre ============ */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 26px;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--green-ink);
+  background: var(--glass-thin);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: var(--sheen);
+  transition:
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+.back:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 26px -20px rgba(24, 42, 33, 0.6),
+    var(--sheen);
+  color: var(--green-ink);
+}
+
+/* ============ pied de page ============ */
+footer {
+  margin-top: 56px;
+  padding: 22px 0 48px;
+  border-top: 1px solid var(--line);
+  font-size: 0.82rem;
+  color: var(--ink-2);
+}
+footer p {
+  margin: 0;
+}
+
+
+/* ============ mobile ============ */
+@media (max-width: 720px) {
+  body {
+    font-size: 16px;
+  }
+  .wrap,
+  .wrap-wide {
+    padding: 0 16px;
+  }
+  .masthead {
+    padding: 14px 0 0;
+    margin-bottom: 28px;
+  }
+  .masthead > .wrap,
+  .masthead > .wrap-wide {
+    padding: 28px 22px 26px;
+    border-radius: 20px;
+  }
+  .masthead h1 {
+    font-size: 1.72rem;
+  }
+  .masthead .lede {
+    font-size: 0.98rem;
+  }
+  .masthead .eyebrow {
+    font-size: 0.63rem;
+    letter-spacing: 0.1em;
+    line-height: 1.5;
+    align-items: flex-start;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+  .masthead .eyebrow span {
+    flex: none;
+  }
+  .contact a {
+    font-size: 0.7rem;
+    padding: 6px 12px;
+  }
+  .grid {
+    grid-template-columns: 1fr; /* une carte par ligne */
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  /* cartes compactes : icone a gauche, texte a droite */
+  .card {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    grid-template-areas:
+      "icon tag"
+      "icon title"
+      "desc desc"
+      "pills pills"
+      "foot foot";
+    align-content: start;
+    column-gap: 12px;
+    padding: 15px 16px 14px;
+    border-radius: 20px;
+  }
+  .card__icon {
+    grid-area: icon;
+    align-self: start;
+    width: 34px;
+    height: 34px;
+    margin: 2px 0 0;
+    font-size: 0.98rem;
+    border-radius: 11px;
+  }
+  .card__tag {
+    grid-area: tag;
+    margin: 0;
+    font-size: 0.57rem;
+    line-height: 1.5;
+  }
+  .card h3 {
+    grid-area: title;
+    margin: 1px 0 0;
+    font-size: 0.98rem;
+    line-height: 1.3;
+  }
+  .card p {
+    grid-area: desc;
+    margin: 9px 0 0;
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+  .card .pills {
+    grid-area: pills;
+    margin: 9px 0 0;
+    gap: 5px;
+  }
+  .pill {
+    font-size: 0.57rem;
+    padding: 2px 8px;
+  }
+  .card__foot {
+    grid-area: foot;
+    margin: 10px 0 0;
+    font-size: 0.68rem;
+  }
+  .skills {
+    margin-bottom: 34px;
+  }
+  .skills__grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .skill {
+    padding: 14px 14px 13px;
+  }
+  .note {
+    padding: 20px 18px 18px;
+    border-radius: 20px;
+  }
+  .note__list {
+    gap: 10px;
+  }
+  .note__list li {
+    padding-left: 12px;
+  }
+  article h2 {
+    font-size: 1.2rem;
+  }
+  /* le flou coute cher sur mobile : on l'allege un peu */
+  .masthead > .wrap,
+  .masthead > .wrap-wide,
+  .card {
+  }
+}
+
+
+/* ---------- compatibilite : ancien balisage de carte ----------
+   utilise par le projet Ansible : span.no pour le numero, span.foot pour
+   le pied de carte, span.badge pour la pastille d'etat. */
+.card .no {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-size: 0.61rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green-ink);
+  opacity: 0.85;
+}
+.card .foot {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green);
+  transition: transform 0.2s ease;
+}
+a.card:hover .foot,
+a.card:focus-visible .foot {
+  transform: translateX(2px);
+}
+/* carte a venir : pied plus discret */
+.card--soon .foot {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+.badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--green-ink);
+  background: var(--green-soft);
+  border: 1px solid var(--line-2);
+}
+
+/* ============ ouverture : fondu + montee en cascade ============ */
+/* reserve a l'accueil, et seulement si l'utilisateur n'a pas demande moins
+   de mouvement : sans animation, le contenu est simplement affiche d'emblee.
+   fill-mode "backwards" (et non "both") : l'etat final de l'animation est
+   identique a l'etat au repos, donc le survol des cartes reste actif. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .home .masthead > .wrap,
+  .home .sec-head,
+  .home .card,
+  .home .skill,
+  .home .note {
+    animation: rise 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+  }
+  /* le panneau d'en-tete part le premier, puis le contenu suit en vagues */
+  .home main > .sec-head {
+    animation-delay: 0.05s;
+  }
+  .home .card:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .home .card:nth-child(2) {
+    animation-delay: 0.16s;
+  }
+  .home .card:nth-child(3) {
+    animation-delay: 0.22s;
+  }
+  .home .skills .sec-head {
+    animation-delay: 0.25s;
+  }
+  .home .skill:nth-child(1) {
+    animation-delay: 0.29s;
+  }
+  .home .skill:nth-child(2) {
+    animation-delay: 0.307s;
+  }
+  .home .skill:nth-child(3) {
+    animation-delay: 0.324s;
+  }
+  .home .skill:nth-child(4) {
+    animation-delay: 0.341s;
+  }
+  .home .skill:nth-child(5) {
+    animation-delay: 0.358s;
+  }
+  .home .skill:nth-child(6) {
+    animation-delay: 0.375s;
+  }
+  .home .skill:nth-child(7) {
+    animation-delay: 0.392s;
+  }
+  .home .skill:nth-child(8) {
+    animation-delay: 0.409s;
+  }
+  .home .note {
+    animation-delay: 0.4s;
+  }
+}
+
+/* ============ mouvement reduit ============ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  a.card:hover,
+  a.card:focus-visible,
+  .skill:hover,
+  .back:hover,
+  .contact a:hover,
+  a.card:hover .card__foot span {
+    transform: none;
+  }
+}
+
+/* ============ impression ============ */
+@media print {
+  body {
+    background: #fff;
+    font-size: 11pt;
+  }
+  body::before {
+    display: none;
+  }
+  /* aucune animation a l'impression : le contenu doit sortir plein, tout de suite */
+  .home .masthead > .wrap,
+  .home .sec-head,
+  .home .card,
+  .home .skill,
+  .home .note {
+    animation: none;
+  }
+  .skip,
+  .back,
+  .contact,
+  .sec-hint {
+    display: none;
+  }
+  .masthead {
+    padding: 0;
+    margin: 0 0 12mm;
+  }
+  /* une seule colonne sur papier, comme sur mobile */
+  .home .masthead > .wrap {
+    display: block;
+    padding: 4mm 5mm;
+  }
+  .home .masthead .eyebrow {
+    margin: 0 0 6mm;
+  }
+  .home .masthead .lede {
+    margin: 4mm 0 0;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 4mm;
+  }
+  .skills__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3mm;
+  }
+  .masthead > .wrap,
+  .masthead > .wrap-wide,
+  .card,
+  .skill,
+  .note,
+  table,
+  blockquote {
+    background: #fff;
+    border: 1px solid #999;
+    box-shadow: none;
+  }
+  .card::before,
+  .card::after,
+  .masthead > .wrap::after,
+  .masthead > .wrap-wide::after {
+    display: none;
+  }
+  .masthead h1 {
+    background: none;
+    color: #000;
+    -webkit-text-fill-color: #000;
+  }
+  /* le degrade de l'accueil ne doit pas survivre a l'impression */
+  .home .masthead h1 {
+    background: none;
+    color: #000;
+    -webkit-text-fill-color: #000;
+  }
+  a {
+    color: #000;
+    border: 0;
+  }
+  pre,
+  pre.sourceCode {
+    background: #f2f2f2;
+    color: #000;
+    border: 1px solid #ccc;
+  }
+}
+
+/* ============ accueil : pleine largeur sur grand ecran ============ */
+/* le conteneur s'etale, la prose reste bornee par .lede (62ch) */
+@media (min-width: 900px) {
+  .home .wrap,
+  .home .wrap-wide {
+    max-width: none;
+    padding-inline: clamp(28px, 4vw, 72px);
+  }
 }
