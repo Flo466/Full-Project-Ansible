@@ -147,9 +147,15 @@ body {
 }
 /* degrade de texte : reserve a l'accueil (les titres generes contiennent des
    emojis, et un emoji dans un texte decoupe en degrade ressort en silhouette) */
+/* degrade de texte sur le titre : bleu petrole, du plus profond au plus clair.
+   Cible le masthead qui porte un chapeau (.lede), donc la page d'accueil seule :
+   les titres generes par pandoc n'en ont pas, et un emoji dans un texte decoupe
+   en degrade ressortirait en silhouette. */
 @supports (background-clip: text) or (-webkit-background-clip: text) {
+  .masthead:has(.lede) h1,
+  .accueil .masthead h1,
   .home .masthead h1 {
-    background: linear-gradient(100deg, #143a2b, #2f6f52 50%, #4d7186);
+    background: linear-gradient(100deg, #15303f, #2f5d7c 55%, #4d7fa3);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -523,6 +529,38 @@ a.card:focus-visible .card__foot span {
 }
 
 /* ============ corps d'article (pages projets) ============ */
+
+/* ============ bulles d'informations ============ */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  margin: 0 0 42px;
+}
+.kpi {
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: var(--glass-thin);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-s);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.kpi:hover { transform: translateY(-2px); box-shadow: var(--shadow-m); }
+.kpi .n {
+  font-size: 1.5rem; font-weight: 700; line-height: 1.1;
+  letter-spacing: -.02em; color: var(--green-ink);
+}
+.kpi .l {
+  margin-top: 6px; font-family: var(--mono); font-size: .66rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2);
+}
+@media (max-width: 720px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 28px; }
+  .kpi { padding: 14px 15px; border-radius: 14px; }
+  .kpi .n { font-size: 1.2rem; }
+  .kpi .l { font-size: .58rem; }
+}
+
 article { max-width: 100%; }
 article h2 {
   margin: 2.4em 0 0.8em;
@@ -654,21 +692,19 @@ tbody tr:last-child td {
 
 /* ============ encadres ============ */
 blockquote {
-  background: var(--glass-strong);
-  border: 1px solid var(--line);
-  border-left: 4px solid var(--green);
+  background: var(--green);
+  color: #ffffff;
+  border: 1px solid var(--green);
+  border-left: 4px solid var(--green-ink);
   border-radius: 0 14px 14px 0;
-  padding: 20px 24px 16px;
+  padding: 22px 26px 18px;
   margin: 0 0 1.8em;
-  box-shadow: var(--shadow-s);
+  box-shadow: var(--shadow-m);
 }
-blockquote p {
-  margin: 0 0 0.6em;
-  font-size: 0.98rem;
-}
-blockquote p:last-child {
-  margin-bottom: 0;
-}
+blockquote strong { color: #ffffff; }
+blockquote p { margin: 0 0 .6em; font-size: .99rem; color: #ffffff; }
+blockquote p:last-child { margin-bottom: 0; }
+blockquote a { color: #ffffff; border-bottom-color: rgba(255,255,255,.55); }
 
 /* ============ listes ============ */
 ul,
@@ -1060,6 +1096,7 @@ a.card:focus-visible .foot {
     -webkit-text-fill-color: #000;
   }
   /* le degrade de l'accueil ne doit pas survivre a l'impression */
+  .masthead:has(.lede) h1,
   .home .masthead h1 {
     background: none;
     color: #000;
