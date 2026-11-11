@@ -2,46 +2,46 @@
   /* ---------- palette claire : blanc, verts, ombres portees ---------- */
   --bg: #ffffff; /* fond de page */
   --paper: #ffffff; /* alias : le fond est blanc partout */
-  --wash: #f7faf8; /* vert tres pale : encadres, en-tetes de tableau */
+  --wash: #f5f8fa; /* vert tres pale : encadres, en-tetes de tableau */
   --white: #ffffff;
   --ink: #17211c; /* texte principal */
   --ink-2: #5b6b62; /* texte secondaire */
-  --green: #2e6a4f; /* feuille : liens, accents */
-  --green-ink: #12362a; /* foret : titres et labels */
-  --green-soft: #e8f1eb; /* vert delave : pastilles, puces */
+  --green: #2f5d7c; /* feuille : liens, accents */
+  --green-ink: #15303f; /* foret : titres et labels */
+  --green-soft: #e7eef3; /* vert delave : pastilles, puces */
 
   /* les surfaces : plus de verre, du blanc plein */
   --glass: #ffffff;
   --glass-strong: #ffffff;
   --glass-thin: #ffffff;
   --glass-line: #e5ece7;
-  --line: #e5ece7;
-  --line-2: #d2ded6;
+  --line: #e4ebf1;
+  --line-2: #cfdae3;
   --blur: 0px;
 
   /* ombres portees : trois niveaux, du plus discret au plus marque */
-  --shadow-s: 0 1px 2px rgba(18, 54, 42, 0.05), 0 4px 10px -6px rgba(18, 54, 42, 0.1);
-  --shadow-m: 0 2px 4px rgba(18, 54, 42, 0.05), 0 14px 28px -14px rgba(18, 54, 42, 0.16);
+  --shadow-s: 0 1px 2px rgba(21, 48, 63, 0.05), 0 4px 10px -6px rgba(21, 48, 63, 0.1);
+  --shadow-m: 0 2px 4px rgba(21, 48, 63, 0.05), 0 14px 28px -14px rgba(21, 48, 63, 0.16);
   /* reflets du verre neutralises : les box-shadow restent valides, sans effet */
   --sheen: 0 0 0 0 rgba(0, 0, 0, 0);
   --glass-inner: 0 0 0 0 rgba(0, 0, 0, 0);
 
   /* accents secondaires, conserves tres pale pour les filets */
-  --clay: rgba(46, 106, 79, 0.35);
-  --sage: rgba(46, 106, 79, 0.55);
-  --ochre: rgba(46, 106, 79, 0.25);
-  --sky: rgba(46, 106, 79, 0.4);
+  --clay: rgba(47, 93, 124, 0.35);
+  --sage: rgba(47, 93, 124, 0.55);
+  --ochre: rgba(47, 93, 124, 0.25);
+  --sky: rgba(47, 93, 124, 0.4);
 
-  --code-bg: #10231b;
+  --code-bg: #0f1e28;
   --sans:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
   --mono:
     ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
     monospace;
-  --col: 840px;
-  --col-wide: 1040px;
-  --col-fig: 1100px;
+  --col: 1400px;
+  --col-wide: 1400px;
+  --col-fig: 1500px;
 
   color-scheme: light;
 }
@@ -509,7 +509,7 @@ a.card:focus-visible .card__foot span {
 .note__list li {
   margin: 0;
   padding-left: 14px;
-  border-left: 2px solid rgba(46, 106, 79, 0.25);
+  border-left: 2px solid rgba(47, 93, 124, 0.25);
   font-size: 0.84rem;
   line-height: 1.5;
   color: var(--ink-2);
@@ -523,9 +523,7 @@ a.card:focus-visible .card__foot span {
 }
 
 /* ============ corps d'article (pages projets) ============ */
-article {
-  max-width: 780px;
-}
+article { max-width: 100%; }
 article h2 {
   margin: 2.4em 0 0.8em;
   padding-bottom: 0.4em;
@@ -551,7 +549,7 @@ p {
 a {
   color: var(--green);
   text-decoration: none;
-  border-bottom: 1px solid rgba(46, 106, 79, 0.35);
+  border-bottom: 1px solid rgba(47, 93, 124, 0.35);
 }
 a:hover {
   color: var(--green-ink);
